@@ -1,9 +1,7 @@
-i=1
-
-
-def test():
-    # i=2
-    print(i)
-
-test()
-print(i)
+def horse(mask):
+    horse=mask
+    def mask(horse):
+        return horse
+    return horse(mask)
+mask=lambda horse:horse(2)
+print(horse(mask))

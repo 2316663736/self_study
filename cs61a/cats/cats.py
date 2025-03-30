@@ -38,6 +38,15 @@ def pick(paragraphs, select, k):
     """
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    i=0
+    for p in paragraphs:
+
+        if select(p):
+            if i == k:
+                return p
+            i+=1
+    return ''
+
     # END PROBLEM 1
 
 
@@ -58,6 +67,16 @@ def about(subject):
 
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    def about_inner(gra):
+        gra = remove_punctuation(lower(gra))
+        the_list=split(gra)
+        for word in the_list:
+            if word in subject:
+                return True
+        return False
+    return about_inner
+
+
     # END PROBLEM 2
 
 
@@ -88,6 +107,19 @@ def accuracy(typed, source):
     source_words = split(source)
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    len_typed=len(typed_words)
+    len_source=len(source_words)
+    min_len=min(len_typed, len_source)
+    if len_typed==0:
+        if len_source==0:
+            return 100.0
+        else:
+            return 0.0
+    i=0
+    for index in range(min_len):
+        if typed_words[index]==source_words[index]:
+            i+=1
+    return i/len_typed*100
     # END PROBLEM 3
 
 
@@ -106,6 +138,7 @@ def wpm(typed, elapsed):
     assert elapsed > 0, "Elapsed time must be positive"
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    return  len(typed)/5 * 60 / elapsed
     # END PROBLEM 4
 
 
@@ -167,6 +200,15 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    if typed_word in word_list:
+        return typed_word
+    min_word=min(word_list, key=lambda w: diff_function(typed_word,w,limit))
+    min_diff=diff_function(typed_word, min_word,limit)
+    if min_diff>limit:
+        return typed_word
+    return min_word
+
+
     # END PROBLEM 5
 
 
@@ -193,7 +235,12 @@ def furry_fixes(typed, source, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    if typed=='' or source=='':
+        return abs(len(typed)-len(source))
+    if limit<0:
+        return 0
+    return  furry_fixes(typed[1:], source[1:], limit-(1 if typed[0]!=source[0] else 0))+(1 if typed[0]!=source[0] else 0)
+    # assert False, 'Remove this line'
     # END PROBLEM 6
 
 
@@ -214,25 +261,35 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-    if ___________: # Base cases should go here, you may add more base cases as needed.
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-    # Recursive cases should go below here
-    if ___________: # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-    else:
-        add = ... # Fill in these lines
-        remove = ...
-        substitute = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
 
-
+    # if ___________: # Base cases should go here, you may add more base cases as needed.
+    #     # BEGIN
+    #     "*** YOUR CODE HERE ***"
+    #     # END
+    # # Recursive cases should go below here
+    # if ___________: # Feel free to remove or add additional cases
+    #     # BEGIN
+    #     "*** YOUR CODE HERE ***"
+    #     # END
+    # else:
+    #     add = ... # Fill in these lines
+    #     remove = ...
+    #     substitute = ...
+    #     # BEGIN
+    #     "*** YOUR CODE HERE ***"
+    #     # END
+    if limit<0:
+        return 0
+    if typed==source:
+        return 0
+    if source=='' or typed=='':
+        return abs(len(typed)-len(source))
+    if source[0]==typed[0]:
+        return minimum_mewtations(typed[1:], source[1:], limit)
+    ans1=1+minimum_mewtations(typed, source[1:], limit-1)#typed在最前面加上source[0]
+    ans2=1+minimum_mewtations(typed[1:], source[1:], limit-1)#typed把typed[0]换为source[0]
+    ans3=1+minimum_mewtations(typed[1:], source, limit-1)#把typed[0]删掉
+    return min(ans1, ans2, ans3)
 # Ignore the line below
 minimum_mewtations = count(minimum_mewtations)
 

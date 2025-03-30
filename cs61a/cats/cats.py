@@ -333,6 +333,17 @@ def report_progress(typed, source, user_id, upload):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    num_=0
+    for i in range(len(typed)):
+        if i<len(source)and typed[i] == source[i]:
+            num_+=1
+        else :
+            ratio = num_ / len(source)
+            upload({'id': user_id, 'progress': ratio})
+            return ratio
+    ratio=num_/len(source)
+    upload({'id': user_id, 'progress': ratio})
+    return  ratio
     # END PROBLEM 8
 
 
@@ -356,7 +367,7 @@ def time_per_word(words, timestamps_per_player):
     """
     tpp = timestamps_per_player  # A shorter name (for convenience)
     # BEGIN PROBLEM 9
-    times = []  # You may remove this line
+    times=[[i[j+1]-i[j] for j in range(len(i)-1) ] for i in timestamps_per_player]
     # END PROBLEM 9
     return {'words': words, 'times': times}
 
@@ -384,6 +395,26 @@ def fastest_words(words_and_times):
     word_indices = range(len(words))    # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    '''①'''
+    # result = []
+    # for i in player_indices:
+    #     tem_list=[]
+    #     for j in word_indices:
+    #         mark=True
+    #         for k in player_indices:
+    #             if not ( times[i][j]<times[k][j]or (times[i][j]==times[k][j] and i<=k) ):
+    #                 mark=False
+    #         if mark:
+    #             tem_list+=[words[j]]
+    #     result+=[tem_list]
+    # return result
+    '''②'''
+    # return [[words[j] for j in word_indices if min([(times[k][j], k) for k in player_indices])[1] == i] for i in player_indices]
+    '''③'''
+    # fastest_players = [min([(times[k][j], k) for k in player_indices])[1] for j in word_indices]
+    '''④'''
+    # return [[words[j] for j in word_indices if fastest_players[j] == i] for i in player_indices]
+    return [ [ words[j] for j in word_indices if sum([times[k][j] for k in player_indices if times[i][j]>times[k][j]or (times[i][j]==times[k][j] and i>k)])==0]  for i in player_indices]
     # END PROBLEM 10
 
 

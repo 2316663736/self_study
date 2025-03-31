@@ -169,7 +169,31 @@ def memo_diff(diff_function):
     def memoized(typed, source, limit):
         # BEGIN PROBLEM EC
         "*** YOUR CODE HERE ***"
-        # END PROBLEM EC
+        pair_cond= (typed, source)
+        if pair_cond not in cache:
+            result = diff_function(typed, source, limit)
+            cache[pair_cond] = result,limit
+            return result
+        last_result,last_limit=cache[pair_cond]
+        if last_limit <= limit:
+            return last_result
+        result = diff_function(typed, source, limit)
+        cache[pair_cond] = result,limit
+        return  result
+        pair_key = (typed, source)
+        if pair_key not in cache:
+            result = diff_function(typed, source, limit)
+            cache[pair_key] = (result, limit)
+            return result
+
+        cached_result, cached_limit = cache[pair_key]
+
+        if limit <= cached_limit:
+            return cached_result
+        else:
+            result = diff_function(typed, source, limit)
+            cache[pair_key] = (result, limit)
+            return result
 
     return memoized
 
@@ -178,7 +202,7 @@ def memo_diff(diff_function):
 # Phase 2 #
 ###########
 
-
+@memo
 def autocorrect(typed_word, word_list, diff_function, limit):
     """Returns the element of WORD_LIST that has the smallest difference
     from TYPED_WORD based on DIFF_FUNCTION. If multiple words are tied for the smallest difference,
@@ -243,7 +267,7 @@ def furry_fixes(typed, source, limit):
     # assert False, 'Remove this line'
     # END PROBLEM 6
 
-
+@memo_diff
 def minimum_mewtations(typed, source, limit):
     """A diff function for autocorrect that computes the edit distance from TYPED to SOURCE.
     This function takes in a string TYPED, a string SOURCE, and a number LIMIT.
@@ -414,7 +438,7 @@ def fastest_words(words_and_times):
     # fastest_players = [min([(times[k][j], k) for k in player_indices])[1] for j in word_indices]
     '''④'''
     # return [[words[j] for j in word_indices if fastest_players[j] == i] for i in player_indices]
-    return [ [ words[j] for j in word_indices if sum([times[k][j] for k in player_indices if times[i][j]>times[k][j]or (times[i][j]==times[k][j] and i>k)])==0]  for i in player_indices]
+    return [ [ words[j] for j in word_indices if sum([get_time(times,k,j) for k in player_indices if get_time(times,i,j)>get_time(times,k,j)or (get_time(times,i,j)==get_time(times,k,j) and i>k)])==0]  for i in player_indices]
     # END PROBLEM 10
 
 

@@ -268,37 +268,20 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    # Base cases for efficient early termination
-    if limit < 0:  # If we've exceeded our limit
-        return limit + 1
-
-    if typed == source:  # If strings are identical, no edits needed
+    if limit<0:
         return 0
-
-    # If one string is empty, the edit distance is the length of the other
-    if not typed:
-        return len(source)
-    if not source:
-        return len(typed)
-
-    # Early termination if length difference exceeds limit
-    if abs(len(typed) - len(source)) > limit:
-        return limit + 1
-
-    # If first characters match, skip to next position with same limit
-    if typed[0] == source[0]:
+    if abs(len(typed)-len(source))>limit:#之前少了这句
+        return limit+1
+    if typed==source:
+        return 0
+    if source=='' or typed=='':
+        return abs(len(typed)-len(source))
+    if source[0]==typed[0]:
         return minimum_mewtations(typed[1:], source[1:], limit)
-
-    # If limit is 0 and characters don't match, we can't make any edits
-    if limit == 0:
-        return 1  # Return a value > limit
-
-    # Calculate all three edit operations
-    add = 1 + minimum_mewtations(typed, source[1:], limit - 1)  # Add to typed
-    remove = 1 + minimum_mewtations(typed[1:], source, limit - 1)  # Remove from typed
-    substitute = 1 + minimum_mewtations(typed[1:], source[1:], limit - 1)  # Substitute in typed
-
-    return min(add, remove, substitute)
+    ans1=1+minimum_mewtations(typed, source[1:], limit-1)#typed在最前面加上source[0]
+    ans2=1+minimum_mewtations(typed[1:], source[1:], limit-1)#typed把typed[0]换为source[0]
+    ans3=1+minimum_mewtations(typed[1:], source, limit-1)#把typed[0]删掉
+    return min(ans1, ans2, ans3)
 # Ignore the line below
 minimum_mewtations = count(minimum_mewtations)
 

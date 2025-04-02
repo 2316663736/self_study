@@ -161,7 +161,6 @@ def memo(f):
 
     return memoized
 
-
 def memo_diff(diff_function):
     """A memoization function."""
     cache = {}
@@ -169,17 +168,6 @@ def memo_diff(diff_function):
     def memoized(typed, source, limit):
         # BEGIN PROBLEM EC
         "*** YOUR CODE HERE ***"
-        pair_cond= (typed, source)
-        if pair_cond not in cache:
-            result = diff_function(typed, source, limit)
-            cache[pair_cond] = result,limit
-            return result
-        last_result,last_limit=cache[pair_cond]
-        if last_limit <= limit:
-            return last_result
-        result = diff_function(typed, source, limit)
-        cache[pair_cond] = result,limit
-        return  result
         pair_key = (typed, source)
         if pair_key not in cache:
             result = diff_function(typed, source, limit)
@@ -187,13 +175,13 @@ def memo_diff(diff_function):
             return result
 
         cached_result, cached_limit = cache[pair_key]
-
         if limit <= cached_limit:
             return cached_result
         else:
             result = diff_function(typed, source, limit)
             cache[pair_key] = (result, limit)
             return result
+        # END PROBLEM EC
 
     return memoized
 
@@ -272,11 +260,6 @@ def minimum_mewtations(typed, source, limit):
     """A diff function for autocorrect that computes the edit distance from TYPED to SOURCE.
     This function takes in a string TYPED, a string SOURCE, and a number LIMIT.
 
-    Arguments:
-        typed: a starting word
-        source: a string representing a desired goal word
-        limit: a number representing an upper bound on the number of edits
-
     >>> big_limit = 10
     >>> minimum_mewtations("cats", "scat", big_limit)       # cats -> scats -> scat
     2
@@ -285,35 +268,37 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
+    # Base cases for efficient early termination
+    if limit < 0:  # If we've exceeded our limit
+        return limit + 1
 
-    # if ___________: # Base cases should go here, you may add more base cases as needed.
-    #     # BEGIN
-    #     "*** YOUR CODE HERE ***"
-    #     # END
-    # # Recursive cases should go below here
-    # if ___________: # Feel free to remove or add additional cases
-    #     # BEGIN
-    #     "*** YOUR CODE HERE ***"
-    #     # END
-    # else:
-    #     add = ... # Fill in these lines
-    #     remove = ...
-    #     substitute = ...
-    #     # BEGIN
-    #     "*** YOUR CODE HERE ***"
-    #     # END
-    if limit<0:
+    if typed == source:  # If strings are identical, no edits needed
         return 0
-    if typed==source:
-        return 0
-    if source=='' or typed=='':
-        return abs(len(typed)-len(source))
-    if source[0]==typed[0]:
+
+    # If one string is empty, the edit distance is the length of the other
+    if not typed:
+        return len(source)
+    if not source:
+        return len(typed)
+
+    # Early termination if length difference exceeds limit
+    if abs(len(typed) - len(source)) > limit:
+        return limit + 1
+
+    # If first characters match, skip to next position with same limit
+    if typed[0] == source[0]:
         return minimum_mewtations(typed[1:], source[1:], limit)
-    ans1=1+minimum_mewtations(typed, source[1:], limit-1)#typed在最前面加上source[0]
-    ans2=1+minimum_mewtations(typed[1:], source[1:], limit-1)#typed把typed[0]换为source[0]
-    ans3=1+minimum_mewtations(typed[1:], source, limit-1)#把typed[0]删掉
-    return min(ans1, ans2, ans3)
+
+    # If limit is 0 and characters don't match, we can't make any edits
+    if limit == 0:
+        return 1  # Return a value > limit
+
+    # Calculate all three edit operations
+    add = 1 + minimum_mewtations(typed, source[1:], limit - 1)  # Add to typed
+    remove = 1 + minimum_mewtations(typed[1:], source, limit - 1)  # Remove from typed
+    substitute = 1 + minimum_mewtations(typed[1:], source[1:], limit - 1)  # Substitute in typed
+
+    return min(add, remove, substitute)
 # Ignore the line below
 minimum_mewtations = count(minimum_mewtations)
 

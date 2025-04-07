@@ -481,28 +481,48 @@ class SlowThrower(ThrowerAnt):
     def throw_at(self, target):
         # BEGIN Problem EC 1
         "*** YOUR CODE HERE ***"
-        if hasattr(target, 'slow_time') and target.slow_time>0:
-            target.slow_reflush=True
-            target.action(0)#进行reflush 把原来的action变回来，所以不需要gamestate这个参数
+        if hasattr(target, 'slow_time') and target.slow_time > 0:
+            target.slow_flush=True
+            target.action(0)
+        origin_action=target.action
+        target.slow_time=self.slow_round
+        def slow_bee_action(self,gamestate):
+            if hasattr(target, 'slow_flush') and self.slow_flush:
+                self.slow_flush=False
 
-        orgin_action=target.action
-        target.slow_new_time=True
+                self.action=origin_action
+            elif self.slow_time<=0:
+                self.action=origin_action
 
-        def slow_bee_action(self, gamestate):
-            if self.slow_new_time:
-                self.slow_new_time=False
-                self.slow_time=gamestate.time
-
-            if hasattr(target, 'slow_reflush') and self.slow_reflush:
-                self.action = orgin_action
-                self.slow_reflush=False
-            elif gamestate.time-self.slow_time>=SlowThrower.slow_round:
-                self.action = orgin_action
                 self.action(gamestate)
-            elif gamestate.time%2==0:
-                orgin_action(gamestate)
+            elif gamestate.time%2==0 :
 
+                origin_action(gamestate)
+            self.slow_time-=1
         target.action=slow_bee_action.__get__(target)#只替换某个实例对象的类函数，经过查阅资料需要使用__get__(self)
+        # if hasattr(target, 'slow_time') and target.slow_time>0:
+        #     target.slow_reflush=True
+        #     target.action(0)#进行reflush 把原来的action变回来，所以不需要gamestate这个参数
+        #
+        # orgin_action=target.action
+        # target.slow_new_time=True
+        #
+        # def slow_bee_action(self, gamestate):
+        #     if self.slow_new_time:
+        #         self.slow_new_time=False
+        #         self.slow_time=gamestate.time
+        #
+        #     if hasattr(target, 'slow_reflush') and self.slow_reflush:
+        #         self.action = orgin_action
+        #         self.slow_reflush=False
+        #     elif gamestate.time-self.slow_time>=SlowThrower.slow_round:
+        #         self.action = orgin_action
+        #         self.action(gamestate)
+        #     elif gamestate.time%2==0:
+        #         orgin_action(gamestate)
+        #
+        # target.action=slow_bee_action.__get__(target)#只替换某个实例对象的类函数，经过查阅资料需要使用__get__(self)
+
         # END Problem EC 1
 
 
@@ -522,31 +542,36 @@ class ScaryThrower(ThrowerAnt):
         if hasattr(target, 'have_scared') and target.have_scared:
             return None
         target.have_scared=True
-        orgin_action=target.action
-        target.scare_time=0
-        def scare_bee_action(self, gamestate):
-            destination = self.place if self.place.entrance.is_hive else self.place.entrance
-            if  self.scare_time>=ScaryThrower.scare_turn:
-                self.action = orgin_action
-                self.action(gamestate)
-            elif hasattr(target, 'slow_time')  and gamestate.time-self.slow_time<SlowThrower.slow_round:
-                if gamestate.time%2  :
-                    if self.blocked():
-                        self.sting(self.place.ant)
-                    elif self.health > 0 and destination is not None:
-                        self.move_to(destination)
+
+        last_slow_time=0
+        if hasattr(target, 'slow_time') and target.slow_time > 0:
+            last_slow_time=target.slow_time
+            target.slow_flush=True
+            target.action(0)
+            target.slow_time=-100
+        origin_action=target.action
+        target.scare_time=self.scare_turn
+
+        def scare_bee_action(self,gamestate):
+            if self.scare_time<=0:
+                if hasattr(target, 'slow_time') and target.slow_time > 0:
+                    origin_action(gamestate)
                 else:
-                    target.scare_time -= 1
-            elif self.health > 0 and destination is not None:
+                    self.action=origin_action
+                    self.action(gamestate)
+            else :
+                destination = self.place if self.place.entrance.is_hive else self.place.entrance
                 if self.blocked():
                     self.sting(self.place.ant)
                 elif self.health > 0 and destination is not None:
                     self.move_to(destination)
-            target.scare_time+=1
-
-            # print("DEBUG:", target.scare_time)
-
+            self.scare_time-=1
         target.action=scare_bee_action.__get__(target)
+
+        if last_slow_time>0:
+            tem_slow=SlowThrower()
+            tem_slow.throw_at(target)
+            target.slow_time=last_slow_time
     # END Problem EC 2
 
 

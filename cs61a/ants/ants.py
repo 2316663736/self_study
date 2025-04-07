@@ -602,9 +602,10 @@ class LaserAnt(ThrowerAnt):
 
     name = 'Laser'
     food_cost = 10
+    damage = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem EC 4
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC 4
 
     def __init__(self, health=1):
@@ -613,12 +614,23 @@ class LaserAnt(ThrowerAnt):
 
     def insects_in_front(self):
         # BEGIN Problem EC 4
-        return {}
+        distance=0
+        result={}
+        the_place=self.place
+        while not the_place.is_hive:
+            for bee_i in the_place.bees:
+                result[bee_i]=distance
+            if the_place.ant and the_place.ant!=self:
+                result[the_place.ant]=distance
+            the_place=the_place.entrance
+            distance+=1
+        return result
         # END Problem EC 4
 
     def calculate_damage(self, distance):
         # BEGIN Problem EC 4
-        return 0
+        result= self.damage-1/4*distance-1/16*self.insects_shot
+        return 0 if result < 0 else result
         # END Problem EC 4
 
     def action(self, gamestate):

@@ -1,72 +1,38 @@
-from http.cookiejar import uppercase_escaped_char
 
+class Tree:
+    """A tree has a label and a list of branches.
 
-class test:
-    def __init__(self):
-        self.a = 1
-    def pr(self):
-        print(self.v)
-    v=0
-test.v=3
-m=test()
-n=test()
-print(m.v)
-print(n.v)
-m.pr()
-n.pr()
-m.v=2
-print(m.v)
-print(n.v)
-m.pr()
-n.pr()
-class Eye:
-    """An eye.
-
-    >>> Eye().draw()
-    '0'
-    >>> print(Eye(False).draw(), Eye(True).draw())
-    0 -
+    >>> t = Tree(3, [Tree(2, [Tree(5)]), Tree(4)])
+    >>> t.label
+    3
+    >>> t.branches[0].label
+    2
+    >>> t.branches[1].is_leaf()
+    True
     """
-    def __init__(self, closed=False):
-        self.closed = closed
+    def __init__(self, label, branches=[]):
+        self.label = label
+        for branch in branches:
+            assert isinstance(branch, Tree)
+        self.branches = list(branches)
 
-    def draw(self):
-        if self.closed:
-            return '-'
+    def is_leaf(self):
+        return not self.branches
+
+    def __repr__(self):
+        if self.branches:
+            branch_str = ', ' + repr(self.branches)
         else:
-            return '0'
+            branch_str = ''
+        return 'Tree({0}{1})'.format(repr(self.label), branch_str)
 
-class Bear:
-    """A bear.
+    def __str__(self):
+        return '\n'.join(self.indented())
 
-    >>> Bear().print()
-    ? 0o0?
-    """
-    def __init__(self):
-        self.nose_and_mouth = 'o'
+    def indented(self):
+        lines = []
+        for b in self.branches:
+            for line in b.indented():
+                lines.append('  ' + line)
+        return [str(self.label)] + lines
 
-    def next_eye(self):
-        return Eye()
-
-    def print(self):
-        left, right = self.next_eye(), self.next_eye()
-        print('? ' + left.draw() + self.nose_and_mouth + right.draw() + '?')
-
-class WinkingBear(Bear):
-    """A bear whose left eye is different from its right eye.
-
-    >>> WinkingBear().print()
-    ? -o0?
-    """
-    def __init__(self):
-        "*** YOUR CODE HERE ***"
-        self.NO_=False
-
-    def next_eye(self):
-        "*** YOUR CODE HERE ***"
-        self.NO_=not self.NO_
-        return Eye(self.NO_)
-
-MMM='a'
-nnnn=MMM.upper()
-print(nnnn)

@@ -1,3 +1,4 @@
 'midsem_survey-correct', (0, 70)
 'VendingMachine-correct', (512, 70)
 'store_digits-correct', (1024, 70)
+'deep_map_mut-correct', (1536, 70)

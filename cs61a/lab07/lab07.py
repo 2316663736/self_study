@@ -39,6 +39,12 @@ class Account:
     def time_to_retire(self, amount):
         """Return the number of years until balance would grow to amount."""
         assert self.balance > 0 and amount > 0 and self.interest > 0
+        tem_balancce=self.balance
+        all_turn=0
+        while tem_balancce<amount:
+            all_turn+=1
+            tem_balancce*=(1+self.interest)
+        return all_turn
         "*** YOUR CODE HERE ***"
 
 

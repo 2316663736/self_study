@@ -76,6 +76,20 @@ class FreeChecking(Account):
     free_withdrawals = 2
 
     "*** YOUR CODE HERE ***"
+    def __init__(self, account_holder):
+        super().__init__(account_holder)
+        self.have_draw=0
+    def withdraw(self, amount):
+        self.have_draw+=1
+        extra_fee=0
+        if self.have_draw>self.free_withdrawals:
+            extra_fee=self.withdraw_fee
+        if amount +extra_fee> self.balance:
+            return "Insufficient funds"
+        if amount > self.max_withdrawal:
+            return "Can't withdraw that amount"
+        self.balance = self.balance - amount-extra_fee
+        return self.balance
 
 
 def without(s, i):
@@ -92,6 +106,12 @@ def without(s, i):
     True
     """
     "*** YOUR CODE HERE ***"
+    if s == Link.empty:
+        return Link.empty
+    elif i==0:
+        return s.rest
+    else:
+        return Link(s.first,without(s.rest,i-1))
 
 
 def duplicate_link(s, val):
@@ -111,8 +131,18 @@ def duplicate_link(s, val):
     Link(1, Link(2, Link(2, Link(2, Link(2, Link(3))))))
     """
     "*** YOUR CODE HERE ***"
-
-
+    # if s== Link.empty:
+    #     return Link.empty
+    # elif s.first==val:
+    #     s.rest=Link(s.first,duplicate_link(s.rest,val))
+    # else:
+    #     duplicate_link(s.rest,val)
+    # return s
+    while s!=Link.empty:
+        if s.first==val:
+            s.rest=Link(val,s.rest)
+            s=s.rest
+        s=s.rest
 class Link:
     """A linked list.
 

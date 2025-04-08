@@ -1,10 +1,10 @@
-passphrase = 'REPLACE_THIS_WITH_PASSPHRASE'
+passphrase = '2bf925d47c03503d3ebe5a6fc12d479b8d12f14c0494b43deba963a0'
 
 def midsem_survey(p):
     """
     You do not need to understand this code.
     >>> midsem_survey(passphrase)
-    '2bf925d47c03503d3ebe5a6fc12d479b8d12f14c0494b43deba963a0'
+    '12b3a1f959b111c5b8382d2d7f1213db11ab7364058c637fb099e585'
     """
     import hashlib
     return hashlib.sha224(p.encode('utf-8')).hexdigest()
@@ -50,13 +50,19 @@ class VendingMachine:
     def __init__(self, product, price):
         """Set the product and its price, as well as other instance attributes."""
         "*** YOUR CODE HERE ***"
-
+        self.product=product
+        self.price=price
+        self.stock_num=0
+        self.current_balance=0
     def restock(self, n):
         """Add n to the stock and return a message about the updated stock level.
 
         E.g., Current candy stock: 3
         """
         "*** YOUR CODE HERE ***"
+        self.stock_num += n
+        return f'Current {self.product} stock: {self.stock_num}'
+
 
     def add_funds(self, n):
         """If the machine is out of stock, return a message informing the user to restock
@@ -69,6 +75,10 @@ class VendingMachine:
         E.g., Current balance: $4
         """
         "*** YOUR CODE HERE ***"
+        if self.stock_num<=0:
+            return f'Nothing left to vend. Please restock. Here is your ${n}.'
+        self.current_balance += n
+        return f'Current balance: ${self.current_balance}'
 
     def vend(self):
         """Dispense the product if there is sufficient stock and funds and
@@ -82,7 +92,17 @@ class VendingMachine:
               Please add $3 more funds.
         """
         "*** YOUR CODE HERE ***"
-
+        if self.stock_num<=0:
+            return f'Nothing left to vend. Please restock.'
+        if self.current_balance<self.price:
+            return f'Please add ${self.price-self.current_balance} more funds.'
+        self.stock_num-=1
+        self.current_balance-=self.price
+        extra_msg=f''
+        if self.current_balance>0:
+            extra_msg=f' and ${self.current_balance} change'
+            self.current_balance=0
+        return f'Here is your {self.product}'+extra_msg+'.'
 
 def store_digits(n):
     """Stores the digits of a positive number n in a linked list.

@@ -14,7 +14,7 @@ def calc_eval(exp):
     3
     """
     if isinstance(exp, Pair):
-        operator = exp.first # UPDATE THIS FOR Q2, e.g (+ 1 2), + is the operator
+        operator = exp.first if exp.first not in bindings else bindings[exp.first]   # UPDATE THIS FOR Q2, e.g (+ 1 2), + is the operator
         operands = exp.rest # UPDATE THIS FOR Q2, e.g (+ 1 2), 1 and 2 are operands
         if operator == 'and': # and expressions
             return eval_and(operands)
@@ -26,8 +26,8 @@ def calc_eval(exp):
         return OPERATORS[exp]
     elif isinstance(exp, int) or isinstance(exp, bool):   # Numbers and booleans
         return exp
-    elif _________________: # CHANGE THIS CONDITION FOR Q4 where are variables stored?
-        return _________________ # UPDATE THIS FOR Q4, how do you access a variable?
+    elif exp in bindings: # CHANGE THIS CONDITION FOR Q4 where are variables stored?
+        return calc_eval(bindings[exp]) # UPDATE THIS FOR Q4, how do you access a variable?
 
 def calc_apply(op, args):
     return op(args)
@@ -57,7 +57,7 @@ def floor_div(args):
     elif len(args)==0:
         raise TypeError('The argument of div should not be empty ')
     elif len(args)==1:
-        return 1//args.first
+        return 1//calc_eval(args.first)
     else:
         result,rest=calc_eval(args.first),args.rest
         while rest is not nil:
@@ -116,7 +116,16 @@ def eval_define(expressions):
     2
     """
     "*** YOUR CODE HERE ***"
-
+    if not isinstance(expressions, Pair):
+        raise TypeError('The argument of eval_define is not a Pair ')
+    elif len(expressions)==0:
+        raise TypeError('The argument of eval_define should not be empty ')
+    elif len(expressions)==2:
+        bindings[expressions.first] = expressions.rest.first
+        return expressions.first
+    else:
+        bindings[expressions.first] = expressions.rest
+        return expressions.first
 OPERATORS = { "//": floor_div, "+": addition, "-": subtraction, "*": multiplication, "/": division }
 
 class Pair:

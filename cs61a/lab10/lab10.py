@@ -59,7 +59,7 @@ def floor_div(args):
     elif len(args)==1:
         return 1//args.first
     else:
-        result,rest=args.first,args.rest
+        result,rest=calc_eval(args.first),args.rest
         while rest is not nil:
             if isinstance(rest.first,int):
                 result,rest=result//rest.first,rest.rest
@@ -88,6 +88,16 @@ def eval_and(expressions):
     """
     "*** YOUR CODE HERE ***"
 
+
+    result,rest=scheme_t,expressions
+    while rest is not nil:
+        if isinstance(rest.first,int) or rest.first is scheme_t or rest.first is scheme_f:
+            result,rest=  rest.first,rest.rest
+        else:
+            result,rest=  calc_eval(rest.first),rest.rest
+        if result is scheme_f:
+            return scheme_f
+    return result
 bindings = {}
 
 def eval_define(expressions):

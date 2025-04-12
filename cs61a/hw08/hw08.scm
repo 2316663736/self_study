@@ -19,7 +19,23 @@
   )
 )
 
-(define (my-filter pred s) 'YOUR-CODE-HERE)
+(define (my-filter pred s)
+  (
+    if
+    (null? s)
+    nil
+    (
+      append
+      (
+        if
+        (pred (car s))
+        (list (car s))
+        nil
+      )
+      (my-filter pred (cdr s))
+    )
+  )
+)
 
 (define (interleave lst1 lst2) 'YOUR-CODE-HERE)
 

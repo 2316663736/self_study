@@ -4,13 +4,26 @@
 
 (define (square n) (* n n))
 
-(define (pow-expr base exp) 'YOUR-CODE-HERE)
+(define (pow-expr base exp)
+  (
+    if
+    (equal? exp 0)
+    1
+    (
+      if
+      (even? exp)
+      `(square ,(pow-expr base (/ exp 2)))
+      `(* ,base ,(pow-expr base (- exp 1)))
+    )
+  )
+)
 
 (define-macro (repeat n expr)
-  `(repeated-call ,n ___))
+  `(repeated-call ,n  (lambda () ,expr)))
 
 ; Call zero-argument procedure f n times and return the final result.
 (define (repeated-call n f)
   (if (= n 1)
-      ___
-      (begin ___ ___)))
+      (f)
+
+      (begin (f)  (repeated-call (- n 1) f))))

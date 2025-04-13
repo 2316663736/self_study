@@ -12,7 +12,7 @@
     if
     (null? args)
     curry
-    (curry-consume (curry (car args)) (cdr args))
+    (curry-consume (curry  (car args)) (cdr args))
   )
 )
 

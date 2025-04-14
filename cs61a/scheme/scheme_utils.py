@@ -33,7 +33,6 @@ def is_scheme_false(val):
 
 def scheme_stringp(x):
     return isinstance(x, str) and x.startswith('"')
-    return isinstance(x, str) and x.startswith('"')
 
 def scheme_symbolp(x):
     return isinstance(x, str) and not scheme_stringp(x)

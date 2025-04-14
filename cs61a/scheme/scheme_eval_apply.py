@@ -34,6 +34,16 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     else:
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
+        # now_expr=rest
+        # oper=scheme_eval(first,env,_)
+        # while now_expr is not nil:
+        #     if scheme_listp(now_expr.first) or scheme_symbolp(now_expr.first) :
+        #         now_expr.first=scheme_eval(now_expr.first,env,_)
+        #     now_expr=now_expr.rest
+        # return scheme_apply(oper, rest ,env)
+        procedure = scheme_eval(first, env)  # 对运算符进行求值，获取对应的过程
+        args = rest.map(lambda operand: scheme_eval(operand, env))  # 对每个操作数进行求值
+        return scheme_apply(procedure, args, env)  # 应用过程到参数
         # END PROBLEM 3
 
 def scheme_apply(procedure, args, env):

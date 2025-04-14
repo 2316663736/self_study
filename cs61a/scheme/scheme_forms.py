@@ -37,6 +37,10 @@ def do_define_form(expressions, env):
         validate_form(expressions, 2, 2) # Checks that expressions is a list of length exactly 2
         # BEGIN PROBLEM 4
         "*** YOUR CODE HERE ***"
+        # assert  expressions.rest.rest is nil , "define is so long"#不知道加不加这句，加不加都能通过测试，但是先不加吧
+        num=scheme_eval(expressions.rest.first, env)
+        env.define(signature, num)
+        return signature
         # END PROBLEM 4
     elif isinstance(signature, Pair) and scheme_symbolp(signature.first):
         # defining a named procedure e.g. (define (f x y) (+ x y))
@@ -57,6 +61,7 @@ def do_quote_form(expressions, env):
     validate_form(expressions, 1, 1)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    return  expressions.first#神奇，刚开始想了半天，最后发现居然是这个东西，有点简单，但是似乎有点难想啊（如果没有理解scheme的 quote)
     # END PROBLEM 5
 
 def do_begin_form(expressions, env):

@@ -45,10 +45,22 @@ def scheme_apply(procedure, args, env):
     if isinstance(procedure, BuiltinProcedure):
         # BEGIN PROBLEM 2
         "*** YOUR CODE HERE ***"
+        assert isinstance(args, Pair) or args is nil ,f"the arguments of {procedure.__name()} must be a pair"
+
         # END PROBLEM 2
         try:
             # BEGIN PROBLEM 2
             "*** YOUR CODE HERE ***"
+            if_need_env=procedure.need_env
+            num_list,now_args=[],args
+            while now_args is not nil:
+                num_list.append(now_args.first)
+                now_args=now_args.rest
+
+            if if_need_env:
+                return procedure.py_func(*num_list, env)
+            else:
+                return procedure.py_func(*num_list)
             # END PROBLEM 2
         except TypeError as err:
             raise SchemeError('incorrect number of arguments: {0}'.format(procedure))

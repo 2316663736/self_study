@@ -55,7 +55,7 @@ def scheme_apply(procedure, args, env):
     if isinstance(procedure, BuiltinProcedure):
         # BEGIN PROBLEM 2
         "*** YOUR CODE HERE ***"
-        assert isinstance(args, Pair) or args is nil ,f"the arguments of {procedure.__name()} must be a pair"
+        assert isinstance(args, Pair) or args is nil ,f"the arguments of {procedure.__name__()} must be a pair"
 
         # END PROBLEM 2
         try:
@@ -101,7 +101,13 @@ def eval_all(expressions, env):
     2
     """
     # BEGIN PROBLEM 6
-    return scheme_eval(expressions.first, env) # replace this with lines of your own code
+    if expressions is nil:
+        return
+    now_expression=expressions
+    while   now_expression.rest is not nil:
+        now_expression.first=scheme_eval(now_expression.first, env)
+        now_expression=now_expression.rest
+    return scheme_eval(now_expression.first, env) # replace this with lines of your own code
     # END PROBLEM 6
 
 

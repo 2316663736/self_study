@@ -41,9 +41,13 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
         #         now_expr.first=scheme_eval(now_expr.first,env,_)
         #     now_expr=now_expr.rest
         # return scheme_apply(oper, rest ,env)
+
         procedure = scheme_eval(first, env)  # 对运算符进行求值，获取对应的过程
         args = rest.map(lambda operand: scheme_eval(operand, env))  # 对每个操作数进行求值
-        return scheme_apply(procedure, args, env)  # 应用过程到参数
+        if isinstance(procedure,Procedure):
+            return scheme_apply(procedure, args, env)  # 应用过程到参数
+        validate_form(expr, 0,1)
+        return procedure#在写problem 9 时进行了修改，之前这里对于first不是一个procedure处理不当，会出问题
         # END PROBLEM 3
 
 def scheme_apply(procedure, args, env):
@@ -77,6 +81,12 @@ def scheme_apply(procedure, args, env):
     elif isinstance(procedure, LambdaProcedure):
         # BEGIN PROBLEM 9
         "*** YOUR CODE HERE ***"
+        new_env=procedure.env.make_child_frame(procedure.formals, args)
+        body=procedure.body
+        while body is not nil:#应该返回最后一个式子
+            result=scheme_eval(body.first,new_env)
+            body=body.rest
+        return result
         # END PROBLEM 9
     elif isinstance(procedure, MuProcedure):
         # BEGIN PROBLEM 11

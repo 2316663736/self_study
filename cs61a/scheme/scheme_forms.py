@@ -211,6 +211,18 @@ def make_let_frame(bindings, env):
     names = vals = nil
     # BEGIN PROBLEM 14
     "*** YOUR CODE HERE ***"
+    have_names=[]
+    while bindings is not nil:
+        now_binds=bindings.first
+        validate_form(now_binds, 2,2)
+        if now_binds.first in have_names:
+            raise SchemeError('name collision')
+        have_names.append(now_binds.first)
+        if not scheme_symbolp(now_binds.first):
+            raise SchemeError('symbol collision')
+        names=Pair(now_binds.first, names)
+        vals=Pair(scheme_eval(now_binds.rest.first,env), vals)
+        bindings = bindings.rest
     # END PROBLEM 14
     return env.make_child_frame(names, vals)
 

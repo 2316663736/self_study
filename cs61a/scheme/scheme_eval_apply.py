@@ -121,7 +121,8 @@ def eval_all(expressions, env):
         return
     now_expression=expressions
     while   now_expression.rest is not nil:
-        now_expression.first=scheme_eval(now_expression.first, env)
+        scheme_eval(now_expression.first, env)
+        # now_expression.first=scheme_eval(now_expression.first, env)
         now_expression=now_expression.rest
     return scheme_eval(now_expression.first, env) # replace this with lines of your own code
     # END PROBLEM 6

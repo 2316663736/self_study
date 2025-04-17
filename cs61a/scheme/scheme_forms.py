@@ -128,6 +128,11 @@ def do_and_form(expressions, env):
     """
     # BEGIN PROBLEM 12
     "*** YOUR CODE HERE ***"
+    result=True
+    while not scheme_nullp(expressions)and  is_scheme_true(result) :
+        result = scheme_eval(expressions.first, env)
+        expressions=expressions.rest
+    return result
     # END PROBLEM 12
 
 def do_or_form(expressions, env):
@@ -146,6 +151,11 @@ def do_or_form(expressions, env):
     """
     # BEGIN PROBLEM 12
     "*** YOUR CODE HERE ***"
+    result=False
+    while not scheme_nullp(expressions) and  is_scheme_false(result) :
+        result = scheme_eval(expressions.first, env)
+        expressions=expressions.rest
+    return result
     # END PROBLEM 12
 
 def do_cond_form(expressions, env):

@@ -122,7 +122,7 @@ def eval_all(expressions, env):
     now_expression=expressions
     while   now_expression.rest is not nil:
         scheme_eval(now_expression.first, env)
-        # now_expression.first=scheme_eval(now_expression.first, env)
+        # now_expression.first=scheme_eval(now_expression.first, env)#这里可能会修改lambda表达式的值，导致结果不对
         now_expression=now_expression.rest
     return scheme_eval(now_expression.first, env) # replace this with lines of your own code
     # END PROBLEM 6

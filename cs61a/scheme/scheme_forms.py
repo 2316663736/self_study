@@ -176,6 +176,17 @@ def do_cond_form(expressions, env):
         if is_scheme_true(test):
             # BEGIN PROBLEM 13
             "*** YOUR CODE HERE ***"
+            result=test
+            if clause.rest is not nil:
+                body=clause.rest
+                if isinstance(body,Pair):
+                    while isinstance(body, Pair):
+                        result = scheme_eval(body.first, env)
+                        body = body.rest
+                else:
+                    result = scheme_eval(body, env)
+            return result
+
             # END PROBLEM 13
         expressions = expressions.rest
 

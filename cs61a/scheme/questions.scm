@@ -7,8 +7,18 @@
 ;; Returns a list of two-element lists
 (define (enumerate s)
   ; BEGIN PROBLEM 15
-  'replace-this-line
+  (
+    define
+    (two-num-str num str)
+    (
+      if
+      (null? str)
+      nil
+      (append (list(list num (car str))) (two-num-str (+ num 1) (cdr str) ))
+    )
   )
+  (two-num-str 0 s)
+)
   ; END PROBLEM 15
 
 ;; Problem 16

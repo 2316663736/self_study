@@ -91,6 +91,12 @@ def scheme_apply(procedure, args, env):
     elif isinstance(procedure, MuProcedure):
         # BEGIN PROBLEM 11
         "*** YOUR CODE HERE ***"
+        new_env=env.make_child_frame(procedure.formals, args)
+        body=procedure.body
+        while body is not nil:
+            result=scheme_eval(body.first,new_env)
+            body=body.rest
+        return result
         # END PROBLEM 11
     else:
         assert False, "Unexpected procedure: {}".format(procedure)
